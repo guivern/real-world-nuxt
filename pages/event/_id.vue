@@ -4,12 +4,9 @@
 
 <script>
 export default {
-  async asyncData({ $axios, error, params }) {
+  async fetch({ $axios, error, params, store }) {
     try {
-      const response = await $axios.get(
-        'http://localhost:3000/events/' + params.id
-      )
-      return { event: response.data }
+      await store.dispatch('events/fetchEvent', params.id)
     } catch (e) {
       error({
         statusCode: 503,
@@ -33,6 +30,9 @@ export default {
     id() {
       return this.$route.params.id
     },
+    event() {
+      return this.$store.state.events.event
+    }
   },
 }
 </script>
