@@ -11,14 +11,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import EventCard from '../components/EventCard.vue'
+import { useEventStore } from '../store/EventStore'
 export default {
   name: 'IndexPage',
   components: { EventCard },
-  async fetch({ $axios, error, store }) {
+  setup() {
+    const eventStore = useEventStore()
+    return { eventStore }
+  },
+  async asyncData({ $pinia, error }) {
     try {
-      await store.dispatch('events/fetchEvents')
+      const eventStore = useEventStore($pinia)
+      await eventStore.fetchEvents()
+      return { events: eventStore.events }
     } catch (e) {
       error({
         statusCode: 503,
@@ -26,13 +32,18 @@ export default {
       })
     }
   },
+  data() {
+    return { events: [] }
+  },
   head() {
     return {
       title: 'Event Listing',
     }
   },
-  computed: mapState({
-    events: state => state.events.events
-  })
+  watch: {
+    events(newValue, oldValue) {
+      window.console.log(newValue, oldValue)
+    },
+  },
 }
 </script>

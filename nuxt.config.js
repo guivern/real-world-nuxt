@@ -20,7 +20,7 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
-  loading: { color: '#39b982'},
+  loading: { color: '#39b982' },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -32,6 +32,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
+    '@nuxtjs/composition-api/module',
+    '@pinia/nuxt',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

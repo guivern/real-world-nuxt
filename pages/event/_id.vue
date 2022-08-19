@@ -1,12 +1,24 @@
 <template>
-  <h1>Event {{ this.event.title }}</h1>
+  <div>
+    <h1>Event {{ this.event.title }}</h1>
+    <ul style="list-style: none">
+      <li>📝 <b>Description:</b> {{ this.event.description }}</li>
+      <li>📍 <b>Location:</b> {{ this.event.location }}</li>
+      <li>🗣 <b>Organizer:</b> {{ this.event.organizer }}</li>
+      <li>📅 <b>Date:</b> {{ this.event.date.split('T')[0] }}</li>
+      <li>⏰ <b>Time:</b> {{ this.event.time }} hs.</li>
+    </ul>
+  </div>
 </template>
 
 <script>
+import { useEventStore } from '../../store/EventStore'
 export default {
-  async fetch({ $axios, error, params, store }) {
+  async asyncData({ $axios, error, params, $pinia }) {
     try {
-      await store.dispatch('events/fetchEvent', params.id)
+      const eventStore = useEventStore($pinia)
+      await eventStore.fetchEvent(params.id)
+      return { event: eventStore.event }
     } catch (e) {
       error({
         statusCode: 503,
@@ -24,14 +36,6 @@ export default {
           content: 'What you need to know about ' + this.event.title,
         },
       ],
-    }
-  },
-  computed: {
-    id() {
-      return this.$route.params.id
-    },
-    event() {
-      return this.$store.state.events.event
     }
   },
 }
